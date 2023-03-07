@@ -1,0 +1,35 @@
+grammar Math;
+
+expr returns [Int val]: term exprPrime;
+
+exprPrime : SUM term exprPrime
+          | SUB term exprPrime
+          | EPS
+          ;
+
+term : factor termPrime;
+
+termPrime : MUL factor termPrime
+          | DIV factor termPrime
+          | EPS
+          ;
+
+factor : OPEN expr CLOSE
+       | NUMBER
+       ;
+
+SUM: "\\+";
+
+SUB: "-";
+
+MUL: "\\*";
+
+DIV: "/";
+
+OPEN: "\\(";
+
+CLOSE: "\\)";
+
+NUMBER : "[0-9]+";
+
+
