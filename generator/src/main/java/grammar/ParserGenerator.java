@@ -1,7 +1,5 @@
 package grammar;
 
-import org.jetbrains.kotlin.codegen.ValueKind;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,12 +13,12 @@ public class ParserGenerator extends ClassPrinter {
 
     public void generateParser(ArrayList<NonTerm> nonTerms, ArrayList<Term> terms, LinkedHashMap<String, LinkedHashSet<String>> first, LinkedHashMap<String, LinkedHashSet<String>> follow, String start) {
         addImports("java.util.*", "java.io.*", "java.util.regex.*", "my_gen.Tree", "my_gen.Lexer");
-        addField("private final String EPS = \"EPSILON\"");
+        addField("private final String EPS = \"EPS\"");
         addField("private final String END = \"END\"");
         addField("Lexer lexer");
 
         addConstructor(new Method("parse", "public", "Tree",
-                        List.of("String input", "Lexer lexer"),
+                        List.of("String input"),
                         List.of("lexer = new Lexer(input);",
                                 "lexer.nextToken();",
                                 "Tree tree = " + start + "();",
@@ -41,6 +39,11 @@ public class ParserGenerator extends ClassPrinter {
             );
         }
 
+        addMethod(new Method("nextToken", "private", "void",
+                        new ArrayList<>(),
+                        List.of("lexer.nextToken();")
+                )
+        );
 
     }
 
@@ -53,9 +56,9 @@ public class ParserGenerator extends ClassPrinter {
                 continue;
             }
             if (token.type().equals(Type.TERM)) {
-                result.add(token.text());
+                result.add(token.name());
             } else {
-                result.addAll(first.get(token.text()));
+                result.addAll(first.get(token.name()));
             }
             eps = false;
             break;
@@ -66,42 +69,44 @@ public class ParserGenerator extends ClassPrinter {
         return result;
     }
 
-    private String generateCase(List<ValueToken> rightPart) {
+    public String generateCases(NonTerm nonTerm, LinkedHashMap<String, LinkedHashSet<String>> first, LinkedHashMap<String, LinkedHashSet<String>> follow) {
         StringBuilder sb = new StringBuilder();
-        for (ValueToken token : rightPart) {
-            if (token.type() == Type.CODE) {
-                sb.append("// code");
-            } else if (token.type() == Type.TERM) {
-                sb.append("nextToken();").append(System.lineSeparator());
-            } else {
-                sb.append(token.text()).append("();").append(System.lineSeparator());
+        List<ValueToken> rightPartWithEps = null;
+        for (ArrayList<ValueToken> alternatives : nonTerm.getAlternatives()) {
+            LinkedHashSet<String> firstSet = getFirstByRightPart(alternatives, first);
+            if (firstSet.contains("EPS")) {
+                rightPartWithEps = alternatives;
+                continue;
             }
+            for (String token : firstSet) {
+                sb.append("case ").append(token).append(":\n");
+            }
+            generateCase(sb, alternatives);
         }
+        if (rightPartWithEps != null) {
+            for (String token : follow.get(nonTerm.name())) {
+                sb.append("case ").append(token).append(":\n");
+            }
+            sb.append("// lol");
+            generateCase(sb, rightPartWithEps);
+        }
+
         return sb.toString();
     }
 
-    public String generateCases(NonTerm nonTerm, LinkedHashMap<String, LinkedHashSet<String>> first, LinkedHashMap<String, LinkedHashSet<String>> follow) {
-        StringBuilder sb = new StringBuilder();
-        ArrayList<ValueToken> rightPartWithEps = null;
-        for (ArrayList<ValueToken> rightPart : nonTerm.getAlternatives()) {
-            HashSet<String> firstByRightPart = getFirstByRightPart(rightPart, first);
-            System.out.println(nonTerm.name() + " " + firstByRightPart);
-            if (firstByRightPart.contains("EPS")) {
-                rightPartWithEps = rightPart;
-                continue;
+    private void generateCase(StringBuilder sb, List<ValueToken> rightPart) {
+        for (ValueToken token : rightPart) {
+            if (token.type().equals(Type.CODE)) {
+                sb.append(token.name()).append("// code;\n");
+            } else if (token.type().equals(Type.TERM)) {
+                System.out.println("tree.addChild("  + "new Tree(\"" + token.name()+ "\")\n");
+                sb.append("tree.addChild(").append("new Tree(lexer.getTokenStr())").append(");");
+                sb.append("nextToken();\n");
+            } else {
+                sb.append("tree.addChild(").append(token.name()).append("());\n");
             }
-            for (String firstToken : firstByRightPart) {
-                sb.append("case ").append(firstToken).append(":").append(System.lineSeparator());
-            }
-            sb.append(generateCase(rightPart)).append(System.lineSeparator());
         }
-        if (rightPartWithEps != null) {
-            for (String followToken : follow.get(nonTerm.name())) {
-                sb.append("case ").append(followToken).append(":").append(System.lineSeparator());
-            }
-            sb.append(generateCase(rightPartWithEps)).append(System.lineSeparator());
-        }
-        return sb.toString();
+        sb.append("break;\n");
     }
 
     public void writeToFile() {

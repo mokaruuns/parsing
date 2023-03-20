@@ -20,6 +20,8 @@ public class LexerGenerator extends ClassPrinter {
         addField("private Pattern PATTERN_EXPRESSION = Pattern.compile(\"" + patternExpr + "\")");
         addField("private final Matcher tokenMatcher");
         addField("private TypeToken curToken");
+        addField("private String curTokenStr");
+
         addConstructor(new Method(className, "public", "", List.of("String expression"), List.of("this.tokenMatcher = PATTERN_EXPRESSION.matcher(expression);")));
         addMethod(new Method("nextToken", "public", "void", List.of(),
                 List.of("while (tokenMatcher.find()) {",
@@ -30,6 +32,7 @@ public class LexerGenerator extends ClassPrinter {
                         "String tokenStr = tokenMatcher.group();",
                         "if (typeToken.match(tokenStr)) {",
                         "curToken = typeToken;",
+                        "curTokenStr = tokenStr;",
                         "return;",
                         "}",
                         "}",
@@ -37,6 +40,7 @@ public class LexerGenerator extends ClassPrinter {
                         "curToken = TypeToken.END;")));
         addMethod(new Method("toString", "public", "String", List.of(), List.of("return curToken.toString();")));
         addMethod(new Method("getToken", "public", "TypeToken", List.of(), List.of("return curToken;")));
+        addMethod(new Method("getTokenStr", "public", "String", List.of(), List.of("return curTokenStr;")));
     }
 
     public void writeToFile(String fileName) {

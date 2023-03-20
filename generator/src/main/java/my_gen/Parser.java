@@ -8,11 +8,11 @@ import my_gen.Tree;
 import my_gen.Lexer;
 
 public class Parser {
-    private final String EPS = "EPSILON";
+    private final String EPS = "EPS";
     private final String END = "END";
     Lexer lexer;
 
-    public Tree parse(String input, Lexer lexer) {
+    public Tree parse(String input) {
         lexer = new Lexer(input);
         lexer.nextToken();
         Tree tree = expr();
@@ -24,9 +24,9 @@ public class Parser {
         switch (lexer.getToken()) {
             case OPEN:
             case NUMBER:
-                term();
-                exprPrime();
-
+                tree.addChild(term());
+                tree.addChild(exprPrime());
+                break;
 
             default:
                 throw new RuntimeException("Unexpected token: " + lexer.getToken());
@@ -38,19 +38,21 @@ public class Parser {
         Tree tree = new Tree("exprPrime");
         switch (lexer.getToken()) {
             case SUM:
+                tree.addChild(new Tree(lexer.getTokenStr()));
                 nextToken();
-                term();
-                exprPrime();
-
+                tree.addChild(term());
+                tree.addChild(exprPrime());
+                break;
             case SUB:
+                tree.addChild(new Tree(lexer.getTokenStr()));
                 nextToken();
-                term();
-                exprPrime();
-
+                tree.addChild(term());
+                tree.addChild(exprPrime());
+                break;
             case END:
             case CLOSE:
-                nextToken();
-
+// loltree.addChild(new Tree(lexer.getTokenStr()));nextToken();
+                break;
 
             default:
                 throw new RuntimeException("Unexpected token: " + lexer.getToken());
@@ -63,9 +65,9 @@ public class Parser {
         switch (lexer.getToken()) {
             case OPEN:
             case NUMBER:
-                factor();
-                termPrime();
-
+                tree.addChild(factor());
+                tree.addChild(termPrime());
+                break;
 
             default:
                 throw new RuntimeException("Unexpected token: " + lexer.getToken());
@@ -77,21 +79,23 @@ public class Parser {
         Tree tree = new Tree("termPrime");
         switch (lexer.getToken()) {
             case MUL:
+                tree.addChild(new Tree(lexer.getTokenStr()));
                 nextToken();
-                factor();
-                termPrime();
-
+                tree.addChild(factor());
+                tree.addChild(termPrime());
+                break;
             case DIV:
+                tree.addChild(new Tree(lexer.getTokenStr()));
                 nextToken();
-                factor();
-                termPrime();
-
+                tree.addChild(factor());
+                tree.addChild(termPrime());
+                break;
             case SUM:
             case SUB:
             case END:
             case CLOSE:
-                nextToken();
-
+// loltree.addChild(new Tree(lexer.getTokenStr()));nextToken();
+                break;
 
             default:
                 throw new RuntimeException("Unexpected token: " + lexer.getToken());
@@ -103,18 +107,25 @@ public class Parser {
         Tree tree = new Tree("factor");
         switch (lexer.getToken()) {
             case OPEN:
+                tree.addChild(new Tree(lexer.getTokenStr()));
                 nextToken();
-                expr();
+                tree.addChild(expr());
+                tree.addChild(new Tree(lexer.getTokenStr()));
                 nextToken();
-
+                break;
             case NUMBER:
+                tree.addChild(new Tree(lexer.getTokenStr()));
                 nextToken();
-
+                break;
 
             default:
                 throw new RuntimeException("Unexpected token: " + lexer.getToken());
         }
         return tree;
+    }
+
+    private void nextToken() {
+        lexer.nextToken();
     }
 
 }

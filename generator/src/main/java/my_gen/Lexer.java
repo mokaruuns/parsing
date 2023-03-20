@@ -7,6 +7,7 @@ public class Lexer {
 	private Pattern PATTERN_EXPRESSION = Pattern.compile("\\+|-|\\*|/|\\(|\\)|[0-9]+");
 	private final Matcher tokenMatcher;
 	private TypeToken curToken;
+	private String curTokenStr;
 
 	public  Lexer(String expression) {
 		this.tokenMatcher = PATTERN_EXPRESSION.matcher(expression);
@@ -21,6 +22,7 @@ public class Lexer {
 		String tokenStr = tokenMatcher.group();
 		if (typeToken.match(tokenStr)) {
 		curToken = typeToken;
+		curTokenStr = tokenStr;
 		return;
 		}
 		}
@@ -34,6 +36,10 @@ public class Lexer {
 
 	public TypeToken getToken() {
 		return curToken;
+	}
+
+	public String getTokenStr() {
+		return curTokenStr;
 	}
 
 }

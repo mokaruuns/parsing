@@ -1,0 +1,26 @@
+digraph G {
+E [label="regex= 1 + 2"];
+0 [label="expr"];
+1 [label="term"];
+17 [label="exprPrime"];
+2 [label="factor"];
+3 [label="1"];
+5 [label="termPrime"];
+7 [label="exprPrime"];
+8 [label="+"];
+10 [label="term"];
+11 [label="factor"];
+12 [label="2"];
+14 [label="termPrime"];
+0 -> 1;
+0 -> 7;
+1 -> 2;
+1 -> 5;
+2 -> 3;
+7 -> 17;
+7 -> 8;
+7 -> 10;
+10 -> 11;
+10 -> 14;
+11 -> 12;
+}

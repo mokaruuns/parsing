@@ -37,6 +37,10 @@ public class TypeTokenGenerator {
                     public boolean match(String text) {
                         return pattern.matcher(text).matches();
                     }
+                    
+                    public String getRegexp() {
+                            return pattern.pattern();
+                    }
                     """);
 
             bufferedWriter.write("}");

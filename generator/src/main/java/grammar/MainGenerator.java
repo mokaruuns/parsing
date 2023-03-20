@@ -4,7 +4,6 @@ import gen.MetaBaseListener;
 import gen.MetaParser;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class MainGenerator extends MetaBaseListener {
     private final String EPS = "EPS";
@@ -26,7 +25,7 @@ public class MainGenerator extends MetaBaseListener {
 //
 //        for (NonTerm nonTerm : nonTerms) {
 //            System.out.println(nonTerm.name() + " "
-//                    + nonTerm.getAlternatives().stream().map(rules -> rules.stream().map(ValueToken::text).collect(Collectors.joining(" "))).collect(Collectors.joining(" | "))
+//                    + nonTerm.getAlternatives().stream().map(rules -> rules.stream().map(ValueToken::name).collect(Collectors.joining(" "))).collect(Collectors.joining(" | "))
 //                    );
 //        }
 
@@ -83,7 +82,7 @@ public class MainGenerator extends MetaBaseListener {
                         if (newlst.remove(EPS)) {
                             newlst.addAll(follow.get(nonTerm.name()));
                         }
-                        changed |= follow.get(token.text()).addAll(newlst);
+                        changed |= follow.get(token.name()).addAll(newlst);
                     }
                 }
             }
@@ -115,9 +114,9 @@ public class MainGenerator extends MetaBaseListener {
                 continue;
             }
             if (token.type().equals(Type.TERM)) {
-                result.add(token.text());
+                result.add(token.name());
             } else {
-                result.addAll(first.get(token.text()));
+                result.addAll(first.get(token.name()));
             }
             eps = false;
             break;
