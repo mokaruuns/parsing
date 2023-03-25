@@ -7,7 +7,7 @@ public record Class(String name, String modifier, String returnType, String retu
     public String toString() {
         return modifier + " " + " class "+ name + " extends Tree {\n" +
                 modifier + " " + returnType + " " + returnName + ";\n" + """
-                private\s""" + name +
+                public\s""" + name +
                 """
                 \s(String node) {
                               super(node);

@@ -78,6 +78,18 @@ public class MetaBaseListener implements MetaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArgsValue(MetaParser.ArgsValueContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArgsValue(MetaParser.ArgsValueContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterRight(MetaParser.RightContext ctx) { }
 	/**
 	 * {@inheritDoc}

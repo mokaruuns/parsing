@@ -19,18 +19,9 @@ public class MainGenerator extends MetaBaseListener {
     public void exitStart(MetaParser.StartContext ctx) {
         init();
 
-//        for (Term term : terms) {
-//            System.out.println(term.name() + " " + term.value());
-//        }
-//
-//        for (NonTerm nonTerm : nonTerms) {
-//            System.out.println(nonTerm.name() + " "
-//                    + nonTerm.getAlternatives().stream().map(rules -> rules.stream().map(ValueToken::name).collect(Collectors.joining(" "))).collect(Collectors.joining(" | "))
-//                    );
-//        }
-
         generateFirst();
         generateFollow();
+
 
         for (NonTerm nonTerm : nonTerms) {
             System.out.println(nonTerm.name() + " -> " + first.get(nonTerm.name()) + " -> " + follow.get(nonTerm.name()));
@@ -75,14 +66,14 @@ public class MainGenerator extends MetaBaseListener {
                 for (ArrayList<ValueToken> alternatives : nonTerm.getAlternatives()) {
                     for (int i = 0; i < alternatives.size(); i++) {
                         ValueToken token = alternatives.get(i);
-                        if (token.type().equals(Type.TERM) || token.type().equals(Type.CODE)) {
+                        if (token.getType().equals(Type.TERM) || token.getType().equals(Type.CODE)) {
                             continue;
                         }
                         LinkedHashSet<String> newlst = getFirstByRightPart(new ArrayList<>(alternatives.subList(i + 1, alternatives.size())));
                         if (newlst.remove(EPS)) {
                             newlst.addAll(follow.get(nonTerm.name()));
                         }
-                        changed |= follow.get(token.name()).addAll(newlst);
+                        changed |= follow.get(token.getName()).addAll(newlst);
                     }
                 }
             }
@@ -110,13 +101,13 @@ public class MainGenerator extends MetaBaseListener {
         LinkedHashSet<String> result = new LinkedHashSet<>();
         boolean eps = true;
         for (ValueToken token : rightPart) {
-            if (token.type().equals(Type.CODE)) {
+            if (token.getType().equals(Type.CODE)) {
                 continue;
             }
-            if (token.type().equals(Type.TERM)) {
-                result.add(token.name());
+            if (token.getType().equals(Type.TERM)) {
+                result.add(token.getName());
             } else {
-                result.addAll(first.get(token.name()));
+                result.addAll(first.get(token.getName()));
             }
             eps = false;
             break;

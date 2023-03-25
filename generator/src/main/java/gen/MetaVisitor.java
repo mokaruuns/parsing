@@ -42,6 +42,12 @@ public interface MetaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitReturnedValue(MetaParser.ReturnedValueContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MetaParser#argsValue}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArgsValue(MetaParser.ArgsValueContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MetaParser#right}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

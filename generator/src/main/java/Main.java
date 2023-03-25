@@ -27,9 +27,6 @@ public class Main {
 //            String result = visitor.visit(tree).;
             ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
             parseTreeWalker.walk(new MainGenerator(), tree);
-
-
-            System.out.println(tree.toStringTree(parser));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

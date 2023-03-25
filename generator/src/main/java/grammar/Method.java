@@ -1,8 +1,10 @@
 package grammar;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-public record Method(String name, String modifier, String returnType, List<String> parameters, List<String> bodyLines) {
+public record Method(String name, String modifier, String returnType, List<String> parameters,
+                     List<String> bodyLines) {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();

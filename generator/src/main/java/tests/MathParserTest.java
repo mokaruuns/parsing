@@ -11,25 +11,15 @@ import java.text.ParseException;
 public class MathParserTest {
     @Test
     public void simpleTest() throws ParseException {
-        String expression = "1 + 2";
-        Tree expected = new Tree("SUM", new Tree("1"), new Tree("2"));
-        Tree actual = new Parser().parse(expression);
+        String expression = "1 + 2 * 5 + sqrt(25 +25 * 3)";
+        Parser actual = new Parser(expression);
+
         System.out.println(actual.toString());
-        generateGraph(actual, expression);
-//        checkTree(expected, actual);
+        Parser.SumSub sumSub = actual.sumSub();
+        System.out.println(sumSub.val);
+        generateGraph(sumSub, expression);
     }
 
-    @Test
-    public void bracketsTest() throws ParseException {
-        String expression = "1 + (2 * 3)";
-        Tree expected = new Tree("SUM", new Tree("1"), new Tree("MUL", new Tree("2"), new Tree("3")));
-        Tree actual = new Parser().parse(expression);
-        System.out.println(actual.toString());
-        generateGraph(actual, expression);
-
-//        checkTree(expected, actual);
-
-    }
 
     private void checkTree(Tree expected, Tree actual) {
         assert expected.getNode().equals(actual.getNode());
@@ -43,6 +33,6 @@ public class MathParserTest {
         Graph graph = new Graph(tree, initialString);
         graph.build();
 
-        graph.toDotFile("dot/graph-" + initialString.hashCode()  +".gv");
+        graph.toDotFile("dot/graph-" + initialString.hashCode() + ".gv");
     }
 }

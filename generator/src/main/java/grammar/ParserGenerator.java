@@ -17,18 +17,16 @@ public class ParserGenerator extends ClassPrinter {
         addField("private final String END = \"END\"");
         addField("Lexer lexer");
 
-        addConstructor(new Method("parse", "public", "Tree",
-                        List.of("String input"),
-                        List.of("lexer = new Lexer(input);",
-                                "lexer.nextToken();",
-                                "Tree tree = " + start + "();",
-                                "return tree;")
-                )
-        );
+        addConstructor(new Method("Parser", "public", "", List.of("String input"),
+                List.of("lexer = new Lexer(input);", "nextToken();")));
         for (NonTerm nonTerm : nonTerms) {
-            addMethod(new Method(nonTerm.name(), "private", "Tree",
-                            new ArrayList<>(),
-                            List.of("Tree tree = new Tree(\"" + nonTerm.name() + "\");",
+            String className = toUpperFirstLetter(nonTerm.name());
+            addMethod(
+                    new Method(nonTerm.name(),
+                            "public",
+                            className,
+                            nonTerm.getArgsString(),
+                            List.of(className + " tree = new " + className + "(\"" + nonTerm.name() + "\");",
                                     "switch (lexer.getToken()) {",
                                     generateCases(nonTerm, first, follow),
                                     "default:",
@@ -53,13 +51,13 @@ public class ParserGenerator extends ClassPrinter {
         LinkedHashSet<String> result = new LinkedHashSet<>();
         boolean eps = true;
         for (ValueToken token : rightPart) {
-            if (token.type().equals(Type.CODE)) {
+            if (token.getType().equals(Type.CODE)) {
                 continue;
             }
-            if (token.type().equals(Type.TERM)) {
-                result.add(token.name());
+            if (token.getType().equals(Type.TERM)) {
+                result.add(token.getName());
             } else {
-                result.addAll(first.get(token.name()));
+                result.addAll(first.get(token.getName()));
             }
             eps = false;
             break;
@@ -88,26 +86,38 @@ public class ParserGenerator extends ClassPrinter {
             for (String token : follow.get(nonTerm.name())) {
                 sb.append("case ").append(token).append(":\n");
             }
-            sb.append("// lol");
-            generateCase(sb, rightPartWithEps);
+//            sb.append("// lol");
+//            generateCase(sb, rightPartWithEps);
+            sb.append("tree.val = acc;\n");
+            sb.append("break;");
+//            sb.append("// ke");
         }
-
         return sb.toString();
     }
 
     private void generateCase(StringBuilder sb, List<ValueToken> rightPart) {
+        sb.append("{\n");
         for (ValueToken token : rightPart) {
-            if (token.type().equals(Type.CODE)) {
-                sb.append("// ").append(token.name()).append("\n");
-            } else if (token.type().equals(Type.TERM)) {
-                System.out.println("tree.addChild(" + "new Tree(\"" + token.name() + "\")\n");
-                sb.append("tree.addChild(").append("new Tree(lexer.getTokenStr())").append(");");
+            if (token.getType().equals(Type.CODE)) {
+//                Systetem.out.println(normalizeCode(token.getName(), "tree."));
+                sb.append("\t\t").append(normalizeCode(token.getName())).append("\n");
+            } else if (token.getType().equals(Type.TERM)) {
+                sb.append("tree.addChild(").append("new Tree(lexer.getTokenStr())").append(");\n");
+                sb.append("String ").append(token.getName()).append(" = ").append("lexer.getTokenStr();\n");
                 sb.append("nextToken();\n");
             } else {
-                sb.append("tree.addChild(").append(token.name()).append("());\n");
+                sb.append(toUpperFirstLetter(token.getName())).append(" ").append(token.getName()).append(" = ").append(token.getName()).append("(").append(String.join(", ", token.getArgs())).append(");\n");
+                sb.append("tree.addChild(").append(token.getName()).append(");\n");
             }
         }
         sb.append("break;\n");
+        sb.append("}\n");
+    }
+
+    private String normalizeCode(String code) {
+        code = code.substring(1, code.length() - 1);
+        return code.replace("$", "tree.");
+
     }
 
     public void writeToFile() {
@@ -124,7 +134,7 @@ public class ParserGenerator extends ClassPrinter {
 
     public void generateReturns(ArrayList<NonTerm> nonTerms) {
         for (NonTerm nonTerm : nonTerms) {
-            addClass(new Class(toUpperFirstLetter(nonTerm.name()), "private", nonTerm.getReturnValue().type(), nonTerm.getReturnValue().name()));
+            addClass(new Class(toUpperFirstLetter(nonTerm.name()), "public", nonTerm.getReturnValue().type(), nonTerm.getReturnValue().name()));
         }
     }
 

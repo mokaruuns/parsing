@@ -59,6 +59,16 @@ public interface MetaListener extends ParseTreeListener {
 	 */
 	void exitReturnedValue(MetaParser.ReturnedValueContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MetaParser#argsValue}.
+	 * @param ctx the parse tree
+	 */
+	void enterArgsValue(MetaParser.ArgsValueContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MetaParser#argsValue}.
+	 * @param ctx the parse tree
+	 */
+	void exitArgsValue(MetaParser.ArgsValueContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MetaParser#right}.
 	 * @param ctx the parse tree
 	 */
