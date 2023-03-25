@@ -1,20 +1,20 @@
 grammar Math;
 
-expr returns [Int val]: term exprPrime;
+expr returns [Integer val]: term exprPrime;
 
-exprPrime : SUM term exprPrime
-          | SUB term exprPrime
+exprPrime returns [Integer val]: SUM term exprPrime
+          | SUB term exprPrime {$val = 0;}
           | EPS
           ;
 
-term : factor termPrime;
+term returns [Integer val]: factor termPrime;
 
-termPrime : MUL factor termPrime
+termPrime returns [Integer val]: MUL factor termPrime
           | DIV factor termPrime
           | EPS
           ;
 
-factor : OPEN expr CLOSE
+factor returns [Integer val]: OPEN expr CLOSE
        | NUMBER
        ;
 

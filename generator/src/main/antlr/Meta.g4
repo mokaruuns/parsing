@@ -56,7 +56,7 @@ NONTERM  : [a-z][a-zA-Z0-9_]*;
 
 
 REGEX : '"' .+? '"';
-CODE : '{:' .+? ':}';
+CODE : '{' .+? '}';
 
 
 VARIABLE : [a-z][a-zA-Z0-9_]*;

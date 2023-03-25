@@ -44,6 +44,7 @@ public class ParserGenerator extends ClassPrinter {
                         List.of("lexer.nextToken();")
                 )
         );
+        generateReturns(nonTerms);
 
     }
 
@@ -97,9 +98,9 @@ public class ParserGenerator extends ClassPrinter {
     private void generateCase(StringBuilder sb, List<ValueToken> rightPart) {
         for (ValueToken token : rightPart) {
             if (token.type().equals(Type.CODE)) {
-                sb.append(token.name()).append("// code;\n");
+                sb.append("// ").append(token.name()).append("\n");
             } else if (token.type().equals(Type.TERM)) {
-                System.out.println("tree.addChild("  + "new Tree(\"" + token.name()+ "\")\n");
+                System.out.println("tree.addChild(" + "new Tree(\"" + token.name() + "\")\n");
                 sb.append("tree.addChild(").append("new Tree(lexer.getTokenStr())").append(");");
                 sb.append("nextToken();\n");
             } else {
@@ -116,4 +117,16 @@ public class ParserGenerator extends ClassPrinter {
             e.printStackTrace();
         }
     }
+
+    private String toUpperFirstLetter(String s) {
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
+    }
+
+    public void generateReturns(ArrayList<NonTerm> nonTerms) {
+        for (NonTerm nonTerm : nonTerms) {
+            addClass(new Class(toUpperFirstLetter(nonTerm.name()), "private", nonTerm.getReturnValue().type(), nonTerm.getReturnValue().name()));
+        }
+    }
+
+
 }

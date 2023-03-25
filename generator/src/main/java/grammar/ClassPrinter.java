@@ -14,6 +14,8 @@ public class ClassPrinter {
     protected ArrayList<Method> constructors;
     protected ArrayList<Method> methods;
 
+    protected ArrayList<Class> classes;
+
     public ClassPrinter(String packageName, String className) {
         this.packageName = packageName;
         this.className = className;
@@ -21,6 +23,7 @@ public class ClassPrinter {
         fields = new ArrayList<>();
         constructors = new ArrayList<>();
         methods = new ArrayList<>();
+        classes = new ArrayList<>();
     }
 
 
@@ -44,6 +47,10 @@ public class ClassPrinter {
         methods.add(method);
     }
 
+    public void addClass(Class clazz) {
+        classes.add(clazz);
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("package ").append(packageName).append(";").append("\n\n");
@@ -61,6 +68,10 @@ public class ClassPrinter {
         }
         for (Method method : methods) {
             sb.append("\t").append(method).append("\n\n");
+        }
+
+        for (Class clazz : classes) {
+            sb.append("\t").append(clazz).append("\n\n");
         }
         sb.append("}");
         return sb.toString();
