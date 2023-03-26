@@ -19,12 +19,11 @@ public class Main {
 
     private static void testParse() {
         Path path = Paths.get("src/main/antlr/Math.mg4");
+//        Path path = Paths.get("src/main/antlr/Regex.mg4");
         try {
             MetaLexer lexer = new MetaLexer(CharStreams.fromPath(path));
             MetaParser parser = new MetaParser(new CommonTokenStream(lexer));
             ParseTree tree = parser.start();
-            MetaBaseVisitor<String> visitor = new MetaBaseVisitor<>();
-//            String result = visitor.visit(tree).;
             ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
             parseTreeWalker.walk(new MainGenerator(), tree);
         } catch (IOException e) {

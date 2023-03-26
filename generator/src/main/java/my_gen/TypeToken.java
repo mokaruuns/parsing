@@ -10,7 +10,6 @@ public enum TypeToken {
 	OPEN("\\("),
 	CLOSE("\\)"),
 	NUMBER("[0-9]+"),
-	SQRT("sqrt"),
 EPS(""),
 END("$");
 private final Pattern pattern;

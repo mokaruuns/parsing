@@ -1,4 +1,4 @@
-package tests;
+package tests.math;
 
 import my_gen.Lexer;
 import my_gen.TypeToken;

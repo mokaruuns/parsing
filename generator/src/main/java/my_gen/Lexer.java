@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Lexer {
-	private Pattern PATTERN_EXPRESSION = Pattern.compile("\\+|-|\\*|/|\\(|\\)|[0-9]+|sqrt");
+	private Pattern PATTERN_EXPRESSION = Pattern.compile("\\+|-|\\*|/|\\(|\\)|[0-9]+");
 	private final Matcher tokenMatcher;
 	private TypeToken curToken;
 	private String curTokenStr;

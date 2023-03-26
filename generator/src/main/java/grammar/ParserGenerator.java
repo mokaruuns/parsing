@@ -88,7 +88,9 @@ public class ParserGenerator extends ClassPrinter {
             }
 //            sb.append("// lol");
 //            generateCase(sb, rightPartWithEps);
-            sb.append("tree.val = acc;\n");
+            if (nonTerm.getReturnValue() != null) {
+                sb.append("tree.val = acc;\n");
+            }
             sb.append("break;");
 //            sb.append("// ke");
         }
@@ -134,7 +136,12 @@ public class ParserGenerator extends ClassPrinter {
 
     public void generateReturns(ArrayList<NonTerm> nonTerms) {
         for (NonTerm nonTerm : nonTerms) {
-            addClass(new Class(toUpperFirstLetter(nonTerm.name()), "public", nonTerm.getReturnValue().type(), nonTerm.getReturnValue().name()));
+            if (nonTerm.getReturnValue() != null) {
+                addClass(new Class(toUpperFirstLetter(nonTerm.name()), nonTerm.getReturnValue().type(), nonTerm.getReturnValue().name()));
+            } else {
+                addClass(new Class(toUpperFirstLetter(nonTerm.name()), "", ""));
+
+            }
         }
     }
 

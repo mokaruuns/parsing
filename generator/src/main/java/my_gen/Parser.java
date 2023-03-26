@@ -21,7 +21,6 @@ public class Parser {
 		switch (lexer.getToken()) {
 		case OPEN:
 case NUMBER:
-case SQRT:
 {
 MulDiv mulDiv = mulDiv();
 tree.addChild(mulDiv);
@@ -81,7 +80,6 @@ break;
 		switch (lexer.getToken()) {
 		case OPEN:
 case NUMBER:
-case SQRT:
 {
 Factor factor = factor();
 tree.addChild(factor);
@@ -162,22 +160,6 @@ nextToken();
 		tree.val = Integer.parseInt(NUMBER);
 break;
 }
-case SQRT:
-{
-tree.addChild(new Tree(lexer.getTokenStr()));
-String SQRT = lexer.getTokenStr();
-nextToken();
-tree.addChild(new Tree(lexer.getTokenStr()));
-String OPEN = lexer.getTokenStr();
-nextToken();
-SumSub sumSub = sumSub();
-tree.addChild(sumSub);
-tree.addChild(new Tree(lexer.getTokenStr()));
-String CLOSE = lexer.getTokenStr();
-nextToken();
-		tree.val = (int) Math.sqrt(sumSub.val);
-break;
-}
 
 		default:
 		throw new RuntimeException("Unexpected token: " + lexer.getToken());
@@ -189,39 +171,29 @@ break;
 		lexer.nextToken();
 	}
 
-	public  class SumSub extends Tree {
+	public class SumSub extends Tree {
 public Integer val;
-public SumSub (String node) {
-              super(node);
-        }
+public SumSub(String node) { super(node);}
 }
 
-	public  class SumSubPrime extends Tree {
+	public class SumSubPrime extends Tree {
 public Integer val;
-public SumSubPrime (String node) {
-              super(node);
-        }
+public SumSubPrime(String node) { super(node);}
 }
 
-	public  class MulDiv extends Tree {
+	public class MulDiv extends Tree {
 public Integer val;
-public MulDiv (String node) {
-              super(node);
-        }
+public MulDiv(String node) { super(node);}
 }
 
-	public  class MulDivPrime extends Tree {
+	public class MulDivPrime extends Tree {
 public Integer val;
-public MulDivPrime (String node) {
-              super(node);
-        }
+public MulDivPrime(String node) { super(node);}
 }
 
-	public  class Factor extends Tree {
+	public class Factor extends Tree {
 public Integer val;
-public Factor (String node) {
-              super(node);
-        }
+public Factor(String node) { super(node);}
 }
 
 }

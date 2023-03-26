@@ -1,4 +1,4 @@
-package tests;
+package tests.math;
 
 import graph.Graph;
 import my_gen.Lexer;
