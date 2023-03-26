@@ -1,6 +1,6 @@
 grammar Meta;
 
-@header{import grammar.*;}
+@header{import utils.*;}
 
 start
     :
@@ -68,7 +68,7 @@ right returns[ArrayList<ValueToken> array]
 
 grammar_name
     :
-    'grammar' TERM ';'
+    'utils' TERM ';'
     ;
 
 TERM   : [A-Z][a-zA-Z0-9_.]*;

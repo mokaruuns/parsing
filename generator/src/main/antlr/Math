@@ -1,0 +1,38 @@
+utils Math;
+
+sumSub returns [Integer val]: mulDiv sumSubPrime(mulDiv.val) {$val = sumSubPrime.val;};
+
+sumSubPrime args (Integer acc) returns [Integer val]:
+            SUM mulDiv {$val = acc + mulDiv.val;} sumSubPrime($val) {$val = sumSubPrime.val;}
+          | SUB mulDiv {$val = acc - mulDiv.val;} sumSubPrime($val) {$val = sumSubPrime.val;}
+          | EPS
+          ;
+
+mulDiv returns [Integer val]: factor mulDivPrime(factor.val) {$val = mulDivPrime.val;};
+
+mulDivPrime args (Integer acc) returns [Integer val]:
+            MUL factor {$val = acc * factor.val;} mulDivPrime($val) {$val = mulDivPrime.val;}
+          | DIV factor {$val = acc / factor.val;} mulDivPrime($val) {$val = mulDivPrime.val;}
+          | EPS
+          ;
+
+factor returns [Integer val]:
+         OPEN sumSub CLOSE {$val = sumSub.val;}
+       | NUMBER {$val = Integer.parseInt(NUMBER);}
+       ;
+
+SUM: "\\+";
+
+SUB: "-";
+
+MUL: "\\*";
+
+DIV: "/";
+
+OPEN: "\\(";
+
+CLOSE: "\\)";
+
+NUMBER : "[0-9]+";
+
+

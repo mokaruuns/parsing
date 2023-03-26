@@ -1,6 +1,6 @@
 // Generated from java-escape by ANTLR 4.11.1
 package gen;
-import grammar.*;
+import utils.*;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -34,7 +34,7 @@ public class MetaParser extends Parser {
 	private static String[] makeLiteralNames() {
 		return new String[] {
 			null, "':'", "';'", "'|'", "'returns'", "'['", "']'", "'args'", "'('", 
-			"','", "')'", "'grammar'"
+			"','", "')'", "'utils'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();

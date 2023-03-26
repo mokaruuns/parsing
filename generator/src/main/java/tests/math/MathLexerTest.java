@@ -1,7 +1,7 @@
 package tests.math;
 
-import my_gen.Lexer;
-import my_gen.TypeToken;
+import my_gen.Math.Lexer;
+import my_gen.Math.TypeToken;
 import org.testng.annotations.Test;
 
 import java.util.List;

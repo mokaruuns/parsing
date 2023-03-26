@@ -1,0 +1,18 @@
+digraph G {
+E [label="expr = a"];
+0 [label="expr"];
+1 [label="factor"];
+2 [label="star"];
+3 [label="value"];
+4 [label="a"];
+6 [label="starPrime"];
+8 [label="factorPrime"];
+10 [label="exprPrime"];
+0 -> 1;
+0 -> 10;
+1 -> 2;
+1 -> 8;
+2 -> 3;
+2 -> 6;
+3 -> 4;
+}

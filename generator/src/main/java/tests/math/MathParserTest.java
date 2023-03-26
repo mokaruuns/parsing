@@ -1,38 +1,61 @@
 package tests.math;
 
-import graph.Graph;
-import my_gen.Lexer;
-import my_gen.Parser;
-import my_gen.Tree;
+import my_gen.Math.Parser;
 import org.testng.annotations.Test;
+import tests.Tester;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 
-public class MathParserTest {
+public class MathParserTest extends Tester {
+
+    private static final Path dirPath = Paths.get("/dot/parser");
+
     @Test
-    public void simpleTest() throws ParseException {
-        String expression = "1 + 2 * 5 + sqrt(25 +25 * 3)";
+    public void sumTest() {
+        String expression = "1 + 2";
+        test(expression, 3);
+    }
+
+    @Test
+    public void subTest() {
+        String expression = "10 - 2";
+        test(expression, 8);
+    }
+
+    @Test
+    public void mulTest() {
+        String expression = "10 * 2";
+        test(expression, 20);
+    }
+
+    @Test
+    public void divTest() {
+        String expression = "10 / 2";
+        test(expression, 5);
+    }
+
+    @Test
+    public void bracketsTest() {
+        String expression = "10 - (40 - 30)";
+        test(expression, 0);
+    }
+
+
+    private void assertValue(Integer expected, Integer actual) {
+        System.out.println("Expected: " + expected);
+        System.out.println("Actual: " + actual);
+        assert expected.equals(actual);
+    }
+
+    private void test(String expression, Integer expected) {
+        System.out.println("expr: " + expression);
+        this.setDirPath(Paths.get("dot/math"));
         Parser actual = new Parser(expression);
-
-        System.out.println(actual.toString());
         Parser.SumSub sumSub = actual.sumSub();
-        System.out.println(sumSub.val);
         generateGraph(sumSub, expression);
+        assertValue(expected, sumSub.val);
     }
 
-
-    private void checkTree(Tree expected, Tree actual) {
-        assert expected.getNode().equals(actual.getNode());
-        assert expected.getChildren().size() == actual.getChildren().size();
-        for (int i = 0; i < expected.getChildren().size(); i++) {
-            checkTree(expected.getChildren().get(i), actual.getChildren().get(i));
-        }
-    }
-
-    public static void generateGraph(Tree tree, String initialString) throws ParseException {
-        Graph graph = new Graph(tree, initialString);
-        graph.build();
-
-        graph.toDotFile("dot/graph-" + initialString.hashCode() + ".gv");
-    }
 }

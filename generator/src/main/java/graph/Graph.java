@@ -1,9 +1,12 @@
 package graph;
 
-import my_gen.Tree;
+import utils.Tree;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 public class Graph {
@@ -66,10 +69,15 @@ public class Graph {
         System.out.println("}");
     }
 
-    public void toDotFile(String filename) {
-        try (PrintWriter out = new PrintWriter(filename)) {
+    public void toDotFile(Path dirPath, String fileName) {
+        try {
+            Files.createDirectories(dirPath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try (PrintWriter out = new PrintWriter(dirPath.resolve(fileName).toFile())) {
             out.println("digraph G {");
-            out.println("E [label=\"regex= " + regexStr + "\"];");
+            out.println("E [label=\"expr = " + regexStr + "\"];");
             for (Map.Entry<Integer, String> entry : labels.entrySet()) {
                 out.println(entry.getKey() + " [label=\"" + entry.getValue() + "\"];");
             }

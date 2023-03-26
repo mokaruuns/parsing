@@ -1,0 +1,38 @@
+utils Regex;
+
+expr : factor exprPrime;
+
+exprPrime : OR factor exprPrime
+            | EPS;
+
+factor : star factorPrime;
+
+factorPrime : star factorPrime
+              | EPS;
+
+star : value starPrime;
+
+starPrime : STAR starPrime
+             | EPS;
+
+value : OPEN expr CLOSE | VAR;
+
+VAR : "[a-zA-Z]";
+
+OR: "\\|";
+
+STAR: "\\*";
+
+OPEN: "\\(";
+
+CLOSE: "\\)";
+
+
+
+
+
+
+
+
+
+
