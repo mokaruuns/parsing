@@ -68,15 +68,11 @@ right returns[ArrayList<ValueToken> array]
 
 grammar_name
     :
-    'utils' TERM ';'
+    'grammar' TERM ';'
     ;
 
 TERM   : [A-Z][a-zA-Z0-9_.]*;
 NONTERM  : [a-z$][a-zA-Z0-9_.]*;
-
-
-
-
 
 REGEX : '"' .+? '"';
 CODE : '{' .+? '}';

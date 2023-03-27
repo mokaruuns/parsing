@@ -88,13 +88,14 @@ public class ParserGenerator extends ClassPrinter {
             for (String token : follow.get(nonTerm.name())) {
                 sb.append("case ").append(token).append(":\n");
             }
-//            sb.append("// lol");
-//            generateCase(sb, rightPartWithEps);
             if (nonTerm.getReturnValue() != null) {
-                sb.append("tree.val = acc;\n");
+                for (ValueToken token : rightPartWithEps) {
+                    if (token.getType().equals(Type.CODE)) {
+                        sb.append("\t\t").append(normalizeCode(token.getName())).append("\n");
+                    }
+                }
             }
             sb.append("break;");
-//            sb.append("// ke");
         }
         return sb.toString();
     }
@@ -103,7 +104,6 @@ public class ParserGenerator extends ClassPrinter {
         sb.append("{\n");
         for (ValueToken token : rightPart) {
             if (token.getType().equals(Type.CODE)) {
-//                Systetem.out.println(normalizeCode(token.getName(), "tree."));
                 sb.append("\t\t").append(normalizeCode(token.getName())).append("\n");
             } else if (token.getType().equals(Type.TERM)) {
                 sb.append("tree.addChild(").append("new Tree(lexer.getTokenStr())").append(");\n");
@@ -122,14 +122,6 @@ public class ParserGenerator extends ClassPrinter {
         code = code.substring(1, code.length() - 1);
         return code.replace("$", "tree.");
 
-    }
-
-    public void writeToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/main/java/my_gen/Parser.java"))) {
-            writer.write(toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private String toUpperFirstLetter(String s) {

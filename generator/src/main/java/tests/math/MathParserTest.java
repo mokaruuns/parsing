@@ -42,12 +42,20 @@ public class MathParserTest extends Tester {
         test(expression, 0);
     }
 
+//    @Test
+//    public void powTest() {
+//        String expression = "2 ** 3 ** 2";
+//        test(expression, 512);
+//    }
+
 
     private void assertValue(Integer expected, Integer actual) {
         System.out.println("Expected: " + expected);
         System.out.println("Actual: " + actual);
         assert expected.equals(actual);
     }
+
+
 
     private void test(String expression, Integer expected) {
         System.out.println("expr: " + expression);

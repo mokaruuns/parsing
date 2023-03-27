@@ -2,9 +2,7 @@ package generators;
 
 import java.util.List;
 
-public record Method(String name, String modifier, String returnType, List<String> parameters,
-                     List<String> bodyLines) {
-
+public record Method(String name, String modifier, String returnType, List<String> parameters, List<String> bodyLines) {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(modifier).append(" ").append(returnType).append(" ").append(name).append("(");

@@ -7,6 +7,8 @@ import utils.Term;
 import utils.Type;
 import utils.ValueToken;
 
+import javax.lang.model.element.TypeElement;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -75,9 +77,14 @@ public class MainGenerator extends MetaBaseListener {
 
         generateFirst();
         generateFollow();
+        if (!checkLL1()) {
+            throw new RuntimeException("Grammar: " + grammarName + " is not LL1");
+        }
+        printNonTermInfo();
     }
 
     private void printNonTermInfo() {
+        System.out.println(grammarName);
         for (NonTerm nonTerm : nonTerms) {
             System.out.println(nonTerm.name() + " -> " + first.get(nonTerm.name()) + " -> " + follow.get(nonTerm.name()));
         }
@@ -158,4 +165,49 @@ public class MainGenerator extends MetaBaseListener {
     public void exitTerm(MetaParser.TermContext ctx) {
         terms.add(ctx.t);
     }
+
+
+    public boolean checkLL1() {
+        for (NonTerm nonTerm : nonTerms) {
+            LinkedHashSet<String> setF = new LinkedHashSet<>();
+            for (ArrayList<ValueToken> alternatives : nonTerm.getAlternatives()) {
+                boolean flag = true;
+                for (ValueToken token : alternatives) {
+                    Set<String> set;
+                    flag = true;
+                    if (token.getType().equals(Type.TERM)) {
+                        set = Set.of(token.getName());
+                    } else if (token.getType().equals(Type.NON_TERM)) {
+                        set = first.get(token.getName());
+                        if (set.contains(EPS)) {
+                            set.remove(EPS);
+                            flag = false;
+                        }
+                    } else {
+                        continue;
+                    }
+                    if (!set.isEmpty()) {
+                        if (setF.isEmpty()) {
+                            setF.addAll(set);
+                        } else {
+                            int size = setF.size();
+                            setF.addAll(set);
+                            if (size != setF.size() - set.size()) {
+                                return false;
+                            }
+                        }
+                        if (flag) {
+                            break;
+                        }
+                    }
+                }
+                if (!flag) {
+                    setF.add(EPS);
+                }
+            }
+
+        }
+        return true;
+    }
+
 }

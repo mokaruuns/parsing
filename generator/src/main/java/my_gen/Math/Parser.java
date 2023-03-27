@@ -66,7 +66,7 @@ break;
 }
 case END:
 case CLOSE:
-tree.val = acc;
+		tree.val = acc;
 break;
 		default:
 		throw new RuntimeException("Unexpected token: " + lexer.getToken());
@@ -127,7 +127,7 @@ case SUM:
 case SUB:
 case END:
 case CLOSE:
-tree.val = acc;
+		tree.val = acc;
 break;
 		default:
 		throw new RuntimeException("Unexpected token: " + lexer.getToken());
